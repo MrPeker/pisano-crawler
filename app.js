@@ -67,7 +67,7 @@ function crawlAllUrls(url) {
 
                 let product = $('#urun.urun1');
                 if(product.html() != null) {
-                    let crawlObj = {url: href, time: moment().startOf('day').toDate()};
+                    let crawlObj = {url: url, time: moment().startOf('day').toDate()};
                     let options = {upsert: true, new: true, setDefaultsOnInsert: true};
                     Crawl.findOneAndUpdate({url}, crawlObj, options, function (error, result) {
                         if (error) return;
