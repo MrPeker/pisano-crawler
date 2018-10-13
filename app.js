@@ -10,6 +10,8 @@ const request = require('request');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+const moment = require('moment');
+
 mongoose.connect('mongodb://pisano:KbE8MdbLfCmr2GGJjCW7zT6njYZtmcRn@52.28.78.239:27017/pisano')
     .then((err) => {
         if(err) throw err;
