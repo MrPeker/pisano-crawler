@@ -10,8 +10,6 @@ const request = require('request');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const moment = require('moment');
-
 mongoose.connect('mongodb://pisano:KbE8MdbLfCmr2GGJjCW7zT6njYZtmcRn@52.28.78.239:27017/pisano')
     .then((err) => {
         if(err) throw err;
@@ -64,19 +62,7 @@ function crawlAllUrls(url) {
             let $ = res.$;
             try {
                 let urls = $("a");
-
                 let product = $('#urun.urun1');
-                if(product.html() != null) {
-                    let crawlObj = {url: url, time: moment().startOf('day').toDate()};
-                    let options = {upsert: true, new: true, setDefaultsOnInsert: true};
-                    Crawl.findOneAndUpdate({url}, crawlObj, options, function (error, result) {
-                        if (error) return;
-                        console.log(result);
-                        // do something with the document
-                    });
-                }
-
-                /*let product = $('#urun.urun1');
                 if(product.html() != null) {
                     let name = $('#ozet .row .baslik h1 a');
                     let title = name.attr('title');
@@ -86,6 +72,7 @@ function crawlAllUrls(url) {
                     let prices = $('#fiyatlar .fiyatlar .fiyat').children();
                     let sellers = [];
                     let rate = $('.uyepuani div .rating .basic').attr('data-average');
+                    let features = $('#ozellikler').html();
                     for(let i = 0; i < prices.length; i++) {
                         let price = prices[i];
                         let seller = {};
@@ -103,7 +90,7 @@ function crawlAllUrls(url) {
 
                         if(i == prices.length -1) {
                             setTimeout(() => {
-                                productObj = { title, model, rate, image, sellers };
+                                productObj = { title, model, rate, image, sellers, features };
                                 let options = { upsert: true, new: true, setDefaultsOnInsert: true };
                                 new Product(productObj);
                                 Product.findOneAndUpdate({ title, model }, productObj, options, function(error, result) {
@@ -117,7 +104,6 @@ function crawlAllUrls(url) {
 
                     console.log('P: ', title, '-', model);
                 }
-                */
 
                 Object.keys(urls).forEach((item) => {
                     if (urls[item].type === 'tag') {
