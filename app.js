@@ -48,7 +48,7 @@ let CrawlSchema = new Schema({
     time: Date
 });
 
-let Crawl = mongoose.model('Crawl', ProductSchema);
+let Crawl = mongoose.model('Crawl', CrawlSchema);
 
 let obselete = []; // Array of what was crawled already
 
