@@ -122,5 +122,5 @@ function crawlAllUrls(url) {
     })
 }
 
-crawlAllUrls('https://www.epey.com/');
+crawlAllUrls(process.argv[2]);
 //crawlAllUrls('https://epey.com/');
