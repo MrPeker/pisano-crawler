@@ -113,13 +113,16 @@ function crawlAllUrls(url) {
                         if (href && !obselete.includes(href)) {
                             href = href.trim();
                             obselete.push(href);
-                            crawlObj = { url: href, time: moment().startOf('day').toDate()};
-                            let options = { upsert: true, new: true, setDefaultsOnInsert: true };
-                            Crawl.findOneAndUpdate({ url }, crawlObj, options, function(error, result) {
-                                if (error) return;
-                                console.log(result);
-                                // do something with the document
-                            });
+                            let product = $('#urun.urun1');
+                            if(product.html() != null) {
+                                crawlObj = {url: href, time: moment().startOf('day').toDate()};
+                                let options = {upsert: true, new: true, setDefaultsOnInsert: true};
+                                Crawl.findOneAndUpdate({url}, crawlObj, options, function (error, result) {
+                                    if (error) return;
+                                    console.log(result);
+                                    // do something with the document
+                                });
+                            }
                             // Slow down the
                             setTimeout(function() {
                                 href.startsWith('http') ? crawlAllUrls(href) : crawlAllUrls(`${url}${href}`) // The latter might need extra code to test if its the same site and it is a full domain with no URI
