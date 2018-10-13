@@ -50,14 +50,14 @@ let Crawl = mongoose.model('Crawl', CrawlSchema);
 
 let obselete = []; // Array of what was crawled already
 
+let c = new Crawler();
+
 function crawlAllUrls(url) {
     //console.log(`Crawling ${url}`);
 
-    let c = new Crawler();
-
-    c.queue({
+    c.direct({
         uri: url,
-        callback: function (err, res, done) {
+        callback: function (err, res) {
             if (err) throw err;
             let $ = res.$;
             try {
@@ -122,10 +122,10 @@ function crawlAllUrls(url) {
             } catch (e) {
                 throw e;
                 console.error(`Encountered an error crawling ${url}. Aborting crawl.`);
-                done()
+              //  done()
 
             }
-            done();
+            //done();
         }
     })
 }
