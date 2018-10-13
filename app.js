@@ -43,7 +43,9 @@ let Product = mongoose.model('Product', ProductSchema);
 
 let obselete = []; // Array of what was crawled already
 
-let c = new Crawler();
+let c = new Crawler({
+    maxConnections: 100000
+});
 
 function crawlAllUrls(url) {
     //console.log(`Crawling ${url}`);
