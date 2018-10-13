@@ -42,24 +42,26 @@ let ProductSchema = new Schema({
 });
 
 let Product = mongoose.model('Product', ProductSchema);
-
+/*
 let CrawlSchema = new Schema({
     url: String,
     time: Date
 });
 
 let Crawl = mongoose.model('Crawl', CrawlSchema);
-
+*/
 let obselete = []; // Array of what was crawled already
 
 let c = new Crawler();
 
 function crawlAllUrls(url) {
-    //console.log(`Crawling ${url}`);
+    console.log(`Crawling ${url}`);
+    /*
     Crawl.findOne({ url, time: { $gte: moment().startOf('day').toDate() } }, (err, doc) => {
         if(err) throw err;
         if(!doc) {
-            c.queue({
+        */
+            c.direct({
                 uri: url,
                 callback: function (err, res, done) {
                     if (err) throw err;
@@ -134,8 +136,10 @@ function crawlAllUrls(url) {
                     done();
                 }
             })
+    /*
         }
     });
+    */
 }
 
 crawlAllUrls(process.argv[2]);
