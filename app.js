@@ -57,7 +57,7 @@ let c = new Crawler();
 function crawlAllUrls(url) {
     //console.log(`Crawling ${url}`);
 
-    c.queue({
+    c.direct({
         uri: url,
         callback: function (err, res, done) {
             if (err) throw err;
