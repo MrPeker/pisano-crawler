@@ -87,7 +87,7 @@ function crawlAllUrls(url) {
                                     console.log(result);
                                     // do something with the document
                                 });
-                            }, 5000);
+                            }, 3000);
                         }
                     }
 
@@ -103,7 +103,7 @@ function crawlAllUrls(url) {
                             // Slow down the
                             setTimeout(function() {
                                 href.startsWith('http') ? crawlAllUrls(href) : crawlAllUrls(`${url}${href}`) // The latter might need extra code to test if its the same site and it is a full domain with no URI
-                            }, 2000)
+                            }, 10000)
 
                         }
                     }
