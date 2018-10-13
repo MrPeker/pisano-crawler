@@ -76,18 +76,20 @@ function crawlAllUrls(url) {
                             seller.url = typeof response !== 'undefined' ? response.request.uri.href : seller.url;
                             sellers.push(seller);
                         });
-                    }
 
-                    setTimeout(() => {
-                        productObj = { title, model, rate, image, sellers };
-                        let options = { upsert: true, new: true, setDefaultsOnInsert: true };
-                        new Product(productObj);
-                        Product.findOneAndUpdate({ title, model }, productObj, options, function(error, result) {
-                            if (error) return;
-                            console.log(result);
-                            // do something with the document
-                        });
-                    }, 20000);
+                        if(i == prices.length -1) {
+                            setTimeout(() => {
+                                productObj = { title, model, rate, image, sellers };
+                                let options = { upsert: true, new: true, setDefaultsOnInsert: true };
+                                new Product(productObj);
+                                Product.findOneAndUpdate({ title, model }, productObj, options, function(error, result) {
+                                    if (error) return;
+                                    console.log(result);
+                                    // do something with the document
+                                });
+                            }, 5000);
+                        }
+                    }
 
                     console.log('P: ', title, '-', model);
                 }
@@ -101,7 +103,7 @@ function crawlAllUrls(url) {
                             // Slow down the
                             setTimeout(function() {
                                 href.startsWith('http') ? crawlAllUrls(href) : crawlAllUrls(`${url}${href}`) // The latter might need extra code to test if its the same site and it is a full domain with no URI
-                            }, 5000)
+                            }, 2000)
 
                         }
                     }
