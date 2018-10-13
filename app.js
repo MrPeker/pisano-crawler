@@ -48,7 +48,7 @@ let CrawlSchema = new Schema({
     time: Date
 });
 
-let Crawl = mongoose.model('Crawl', ProductSchema);
+let Crawl = mongoose.model('Crawl', CrawlSchema);
 
 let obselete = []; // Array of what was crawled already
 
@@ -76,6 +76,7 @@ function crawlAllUrls(url) {
                             let prices = $('#fiyatlar .fiyatlar .fiyat').children();
                             let sellers = [];
                             let rate = $('.uyepuani div .rating .basic').attr('data-average');
+                            let features = $('#ozellikler').html();
                             for(let i = 0; i < prices.length; i++) {
                                 let price = prices[i];
                                 let seller = {};
@@ -93,7 +94,7 @@ function crawlAllUrls(url) {
 
                                 if(i == prices.length -1) {
                                     setTimeout(() => {
-                                        productObj = { title, model, rate, image, sellers };
+                                        productObj = { title, model, rate, image, sellers, features };
                                         let options = { upsert: true, new: true, setDefaultsOnInsert: true };
                                         new Product(productObj);
                                         Product.findOneAndUpdate({ title, model }, productObj, options, function(error, result) {
