@@ -1,6 +1,9 @@
 const fetch = require('node-fetch');
 const Crawler = require("crawler");
 
+const cheerio = require('cheerio');
+const request = require('request');
+
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
@@ -21,14 +24,16 @@ let ProductSchema = new Schema({
     title: String,
     model: String,
     rate: String,
+    image: String,
     sellers: [{
         title: String,
         price: Number,
         shipment: String,
-        productTitle: String,
-        seller: String
+        seller: String,
+        url: String,
     }],
-   comments: []
+   comments: [],
+    features: String
 });
 
 let Product = mongoose.model('Product', ProductSchema);
@@ -49,9 +54,44 @@ function crawlAllUrls(url) {
                 let urls = $("a");
                 let product = $('#urun.urun1');
                 if(product.html() != null) {
-                    //let productObj =
-                    console.log('Product: ' + $('#ozet .row .baslik h1 a'));
+                    let name = $('#ozet .row .baslik h1 a');
+                    let title = name.attr('title');
+                    let model = cheerio.load(name.text().replace(title, '')).text().match(/\((.*?)\)/);
+                    model = model == null ? '' : model[1];
+                    let image = product.find('#resim .buyuk div a img').attr('src');
+                    let prices = $('#fiyatlar .fiyatlar .fiyat').children();
+                    let sellers = [];
+                    let rate = $('.uyepuani div .rating .basic').attr('data-average');
+                    for(let i = 0; i < prices.length; i++) {
+                        let price = prices[i];
+                        let seller = {};
+                        seller.seller = price.attribs.title.split(title)[0].trim();
+                        let priceDOM = $(price);
+                        seller.title = priceDOM.find('.urun_adi')[0].children[0].data.trim();
+                        seller.price = priceDOM.find('.urun_fiyat')[0].attribs["data-sort"];
+                        seller.price = seller.price.substring(0, seller.price.length - 2);
+                        seller.shipment = priceDOM.find('.urun_fiyat p strong span').text() === 'Ücretsiz Kargo' ? 'free' : 'paid';
+                        seller.url = price.attribs.href;
+                        let r = request(seller.url, function (e, response) {
+                            seller.url = typeof response !== 'undefined' ? response.request.uri.href : seller.url;
+                            sellers.push(seller);
+                        });
+                    }
+
+                    setTimeout(() => {
+                        productObj = { title, model, rate, image, sellers };
+                        let options = { upsert: true, new: true, setDefaultsOnInsert: true };
+                        new Product(productObj);
+                        Product.findOneAndUpdate({ title, model }, productObj, options, function(error, result) {
+                            if (error) return;
+                            console.log(result);
+                            // do something with the document
+                        });
+                    }, 20000);
+
+                    console.log('P: ', title, '-', model);
                 }
+
                 Object.keys(urls).forEach((item) => {
                     if (urls[item].type === 'tag') {
                         let href = urls[item].attribs.href;
@@ -67,6 +107,7 @@ function crawlAllUrls(url) {
                     }
                 });
             } catch (e) {
+                throw e;
                 console.error(`Encountered an error crawling ${url}. Aborting crawl.`);
                 done()
 
@@ -76,4 +117,5 @@ function crawlAllUrls(url) {
     })
 }
 
-crawlAllUrls('https://epey.com/');
+crawlAllUrls('https://www.epey.com/akilli-telefonlar/xiaomi-mi-8-128gb.html#');
+//crawlAllUrls('https://epey.com/');
