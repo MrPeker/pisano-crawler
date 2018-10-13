@@ -117,5 +117,5 @@ function crawlAllUrls(url) {
     })
 }
 
-crawlAllUrls('https://www.epey.com/akilli-telefonlar/xiaomi-mi-8-128gb.html#');
+crawlAllUrls('https://www.epey.com/');
 //crawlAllUrls('https://epey.com/');
