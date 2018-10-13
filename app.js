@@ -59,7 +59,7 @@ function crawlAllUrls(url) {
 
     c.direct({
         uri: url,
-        callback: function (err, res, done) {
+        callback: function (err, res) {
             if (err) throw err;
             let $ = res.$;
             try {
@@ -125,10 +125,8 @@ function crawlAllUrls(url) {
             } catch (e) {
                 throw e;
                 console.error(`Encountered an error crawling ${url}. Aborting crawl.`);
-                done()
 
             }
-            done();
         }
     })
 }
