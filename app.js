@@ -1,3 +1,6 @@
+#!/usr/bin/env node
+process.env.UV_THREADPOOL_SIZE = 1024;
+
 const fetch = require('node-fetch');
 const Crawler = require("crawler");
 
