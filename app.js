@@ -10,8 +10,6 @@ const request = require('request');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-
-
 mongoose.connect('mongodb://pisano:KbE8MdbLfCmr2GGJjCW7zT6njYZtmcRn@52.28.78.239:27017/pisano')
     .then((err) => {
         if(err) throw err;
@@ -52,22 +50,19 @@ let Crawl = mongoose.model('Crawl', ProductSchema);
 
 let obselete = []; // Array of what was crawled already
 
-let c = new Crawler({
-    rateLimit: 100,
-    maxConnections: 100,
-});
+let c = new Crawler();
 
 function crawlAllUrls(url) {
     //console.log(`Crawling ${url}`);
 
-    c.direct({
+    c.queue({
         uri: url,
-        callback: function (err, res) {
+        callback: function (err, res, done) {
             if (err) throw err;
             let $ = res.$;
             try {
                 let urls = $("a");
-                let product = $('#urun.urun1');
+                /*let product = $('#urun.urun1');
                 if(product.html() != null) {
                     let name = $('#ozet .row .baslik h1 a');
                     let title = name.attr('title');
@@ -102,14 +97,13 @@ function crawlAllUrls(url) {
                                     console.log(result);
                                     // do something with the document
                                 });
-
-                                new Crawl({ url: url, time: Date.now() }).save();
                             }, 3000);
                         }
                     }
 
                     console.log('P: ', title, '-', model);
                 }
+                */
 
                 Object.keys(urls).forEach((item) => {
                     if (urls[item].type === 'tag') {
@@ -117,10 +111,17 @@ function crawlAllUrls(url) {
                         if (href && !obselete.includes(href)) {
                             href = href.trim();
                             obselete.push(href);
+                            crawlObj = { url: href, time: moment().startOf('day').toDate()};
+                            let options = { upsert: true, new: true, setDefaultsOnInsert: true };
+                            Crawl.findOneAndUpdate({ url }, crawlObj, options, function(error, result) {
+                                if (error) return;
+                                console.log(result);
+                                // do something with the document
+                            });
                             // Slow down the
                             setTimeout(function() {
                                 href.startsWith('http') ? crawlAllUrls(href) : crawlAllUrls(`${url}${href}`) // The latter might need extra code to test if its the same site and it is a full domain with no URI
-                            }, 10000)
+                            }, 3000)
 
                         }
                     }
@@ -128,8 +129,10 @@ function crawlAllUrls(url) {
             } catch (e) {
                 throw e;
                 console.error(`Encountered an error crawling ${url}. Aborting crawl.`);
+                done()
 
             }
+            done();
         }
     })
 }
