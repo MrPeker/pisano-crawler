@@ -102,7 +102,7 @@ function crawlAllUrls(url) {
                                 new Product(productObj);
                                 Product.findOneAndUpdate({ title, model }, productObj, options, function(error, result) {
                                     if (error) return;
-                                    console.log(result);
+                                    console.log(result.title, result.model, result.sellers.length);
                                     // do something with the document
                                 });
                             }, 15000);
