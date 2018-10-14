@@ -105,7 +105,7 @@ function crawlAllUrls(url) {
                                     console.log(result);
                                     // do something with the document
                                 });
-                            }, 3000);
+                            }, 15000);
                         }
                     }
 
