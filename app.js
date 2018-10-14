@@ -68,7 +68,7 @@ function crawlAllUrls(url) {
                 $('#menu').remove();
                 $('#bilgiler #grup .grup li .cell span a').remove();
                 let urls = $("a");
-                let product = $('#urun.urun1');
+                let product = $('#urun');
                 if(product.html() != null) {
                     let name = $('#ozet .row .baslik h1 a');
                     let title = name.attr('title');
