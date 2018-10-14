@@ -64,6 +64,7 @@ function crawlAllUrls(url) {
             try {
                 $('#ust').remove();
                 $('#alt').remove();
+                $('#sol').remove();
                 $('#menu').remove();
                 let urls = $("a");
                 let product = $('#urun.urun1');
