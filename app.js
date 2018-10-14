@@ -36,7 +36,8 @@ let ProductSchema = new Schema({
         url: String,
     }],
    comments: [],
-    features: String
+    features: String,
+    featuresText: String
 });
 
 let Product = mongoose.model('Product', ProductSchema);
@@ -73,6 +74,7 @@ function crawlAllUrls(url) {
                     let sellers = [];
                     let rate = $('.uyepuani div .rating .basic').attr('data-average');
                     let features = $('#ozellikler').html();
+                    let featuresText = $('#ozellikler').text();
                     for(let i = 0; i < prices.length; i++) {
                         let price = prices[i];
                         let seller = {};
@@ -90,7 +92,7 @@ function crawlAllUrls(url) {
 
                         if(i == prices.length -1) {
                             setTimeout(() => {
-                                productObj = { title, model, rate, image, sellers, features };
+                                productObj = { title, model, rate, image, sellers, features, featuresText };
                                 let options = { upsert: true, new: true, setDefaultsOnInsert: true };
                                 new Product(productObj);
                                 Product.findOneAndUpdate({ title, model }, productObj, options, function(error, result) {
