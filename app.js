@@ -126,8 +126,7 @@ function crawlAllUrls(url) {
 
                 });
             } catch (e) {
-                //throw e;
-                //console.error(`Encountered an error crawling ${url}. Aborting crawl.`);
+                console.error(`Encountered an error crawling ${url}. Aborting crawl.`);
                 done()
 
             }
