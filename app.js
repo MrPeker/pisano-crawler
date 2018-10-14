@@ -66,6 +66,7 @@ function crawlAllUrls(url) {
                 $('#alt').remove();
                 $('#sol').remove();
                 $('#menu').remove();
+                $('#bilgiler #grup .grup li .cell span a').remove();
                 let urls = $("a");
                 let product = $('#urun.urun1');
                 if(product.html() != null) {
