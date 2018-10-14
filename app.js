@@ -56,9 +56,9 @@ let c = new Crawler();
 function crawlAllUrls(url) {
     //console.log(`Crawling ${url}`);
 
-    c.direct({
+    c.queue({
         uri: url,
-        callback: function (err, res) {
+        callback: function (err, res, done) {
             if (err) throw err;
             let $ = res.$;
             try {
@@ -117,17 +117,17 @@ function crawlAllUrls(url) {
                             setTimeout(function() {
                                 href.startsWith('http') ? crawlAllUrls(href) : crawlAllUrls(`${url}${href}`) // The latter might need extra code to test if its the same site and it is a full domain with no URI
                             }, 3000)
-
                         }
                     }
+
                 });
             } catch (e) {
                 throw e;
                 console.error(`Encountered an error crawling ${url}. Aborting crawl.`);
-              //  done()
+            done()
 
             }
-            //done();
+            done();
         }
     })
 }
