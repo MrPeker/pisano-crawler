@@ -62,6 +62,8 @@ function crawlAllUrls(url) {
             if (err) throw err;
             let $ = res.$;
             try {
+                $('#ust').remove();
+                $('#menu').remove();
                 let urls = $("a");
                 let product = $('#urun.urun1');
                 if(product.html() != null) {
